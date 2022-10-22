@@ -5,3 +5,9 @@
     run commands is without using their path. When you run `ls`, you are not giving the 
     shell a path. The shell instead searches for an executable with that name in all of 
     the directories listed in the `$PATH` environment variable.  
+
+(b) In order to find a hidden file, a quick shortcut that may work is to look around 
+    using `ls -A`. If there are too many directories or files to look through, such that
+    manual searching is not fast or easy, using the tool `find` works well. `find` works
+    on hidden files. For information on how to use `find`, see `man find`.  
+   
