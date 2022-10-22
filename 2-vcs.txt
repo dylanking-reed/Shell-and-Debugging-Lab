@@ -1,0 +1,6 @@
+(b) If there are non-committed issues with a file, it can be restored to the last 
+    committed state using `git restore <file>`. 
+
+(c) Merging changes is often seamless. If the commits in the remote do not conflict with
+    commits in the local repository, a `git pull` will automatically merge the changes
+    and bring the local repository up-to-date. If there are conflicts,  
