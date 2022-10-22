@@ -1,0 +1,7 @@
+(a) There are two ways to run executables (commands) in the shell. The first is by 
+    invoking the executable with its path, relative or absolute. Calling an executable
+    in the current working directory is an example of this: for example, running `./a.out`
+    in the shell will invoke the executable based on its relative path. The second way to
+    run commands is without using their path. When you run `ls`, you are not giving the 
+    shell a path. The shell instead searches for an executable with that name in all of 
+    the directories listed in the `$PATH` environment variable.  
