@@ -2,5 +2,13 @@
     committed state using `git restore <file>`. 
 
 (c) Merging changes is often seamless. If the commits in the remote do not conflict with
-    commits in the local repository, a `git pull` will automatically merge the changes
-    and bring the local repository up-to-date. If there are conflicts, fizz buzz bizz good!  
+    commits in the local repository, a `git push` will automatically merge the changes and
+    synchronize the local with the remote. If there are conflicts, the `git push` will
+    fail with "Updates were rejected because the remote contains work that you do not
+    have locally". It provides a hint to "first integrate remote changes". This is done
+    using `git pull`. When a `git pull` is attempted with conflicting changes, it will
+    fail with "Automatic merge failed; fix conflicts and then commit the result." Then, in
+    the file(s) with conflict(s), all of the conflicts will be expanded and can be 
+    repaired. Once they are repaired and the repairs are committed, `git push` will
+    succeed and the remote and local will be synchronized.
+
