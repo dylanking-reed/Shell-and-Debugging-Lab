@@ -1,0 +1,41 @@
+In working on my rewrite of my nearest-even rounding function for my tinyfloat rewrite, I wrote an initial implementation: 
+```c 
+uint32_t round_nearest_even(uint32_t val, uint8_t place) {
+  uint32_t truncated = val & ((1u << place) - 1);
+  uint32_t left = val >> place;
+  bool truncated_msb_is1 = truncated >= (1u << place); 
+  bool left_lsb_is1 = (left & 1) == 1;
+  bool greater_than_halfway = truncated > (1u << place);
+  if (truncated_msb_is1 && (left_lsb_is1 || greater_than_halfway)) {
+    return left + 1;
+  } else {
+    return left;
+  }
+}
+```
+This implementation was meant to be a translation-to-code of the algorithm for binary rounding detailed on slide 27 of the floats powerpoint. I wrote tests for all of the cases, also based on the examples given on slide 27:
+```c
+void rounding_test() {
+  printf("Running test: rounding_test ... ");
+  assert(round_nearest_even(0b1000011, 3) == 0b1000);
+  assert(round_nearest_even(0b1000110, 3) == 0b1001);
+  assert(round_nearest_even(0b1011100, 3) == 0b1100);
+  assert(round_nearest_even(0b1010100, 3) == 0b1010);
+  printf("PASSED\n");
+}
+```
+When run, the second assertion failed! In order to find out why the result was incorrect, I used GDB, setting a breakpoint at that assertion. I stepped through the execution, checking at each step that the locals were being set correctly. I noticed that for this case, `greater_than_halfway` should have been `true`, and it remained `false` after being initialized. Because of this, I found an issue. The condition `greater_than_halfway` would never be true becacuse `1u << place` is always 1 above the maximum value that `truncated` can carry. I changed the code to have  `1u << (place - 1)` in that spot, and as I was changing that, I realized that I had made the same logical error when setting `truncated_msb_is1`, so I made the same change to that line. After this, I ran my tests and they passed. This was the final code:  
+```c
+uint32_t round_nearest_even(uint32_t val, uint8_t place) {
+  uint32_t truncated = val & ((1u << place) - 1);
+  uint32_t left = val >> place;
+  bool truncated_msb_is1 = truncated >= (1u << (place - 1)); 
+  bool left_lsb_is1 = (left & 1) == 1;
+  bool greater_than_halfway = truncated > (1u << (place - 1));
+  if (truncated_msb_is1 && (left_lsb_is1 || greater_than_halfway)) {
+    return left + 1;
+  } else {
+    return left;
+  }
+}
+```
